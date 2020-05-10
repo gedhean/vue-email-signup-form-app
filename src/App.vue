@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="btn-wrapper">
+      <button @click="displayModal = true">Open Modal</button>
+    </div>
     <modal
       v-if="displayModal"
       v-on:close-modal="closeModal"
@@ -29,3 +32,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.btn-wrapper {
+  text-align: center;
+  padding: 16px 8px;
+}
+</style>
