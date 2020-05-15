@@ -1,49 +1,28 @@
 <template>
-  <form name="email-form" @submit.prevent="onSubmit">
-    <h2 class="title is-2 has-text-centered">Before you go</h2>
-    <p class="subtitle is-5 has-text-centered">How about subscribing?</p>
+  <form @submit="onSubmit">
+    <h2 class="title">Before you go</h2>
+    <p class="subtitle">How about subscribe?</p>
     <div class="field is-grouped">
-      <div class="control has-icons-left is-expanded">
-        <input
-          type="email"
-          v-model="email"
-          class="input is-medium is-flat"
-          placeholder="email address"
-          required="true"
-          />
+      <div class="control is-expanded has-icon-left">
+        <input class="input" type="email" name="email" v-model="email">
         <span class="icon is-small is-left">
           <i class="fas fa-envelope"></i>
         </span>
       </div>
       <div class="control">
-        <button
-          type="submit"
-          name="email-form"
-          class="button is-medium is-link">
-        <strong>Subscribe</strong>
-        </button>
+        <button type="submit" class="button is-meduim is-link">Submit</button>
       </div>
     </div>
     <div class="field">
       <div class="control has-text-centered">
         <p class="help has-text-centered">Enter the competition?</p>
         <label class="radio">
-        <input
-          v-model="enterCompetition"
-          value="yes"
-          type="radio"
-          name="enterCompetition"
-          />
-        Yes
+          <input type="radio" name="enterCompetition" v-model="enterCompetition" value="yes" checked>
+          Yes
         </label>
         <label class="radio">
-        <input
-          v-model="enterCompetition"
-          value="no"
-          type="radio"
-          name="enterCompetition"
-          />
-        No
+          <input type="radio" name="enterCompetition" v-model="enterCompetition" value="no">
+          No
         </label>
       </div>
     </div>
@@ -52,13 +31,15 @@
 
 <script>
 export default {
-  data: () => ({
-    email: null,
-    enterCompetition: 'yes'
-  }),
+  data () {
+    return {
+      email: null,
+      enterCompetition: 'yes'
+    }
+  },
   methods: {
-    onSubmit (event) {
-      this.axios.post('http://demo7437963.mockable.io/validate', {
+    onSubmit () {
+      this.axios.post('/subscribe', {
         email: this.email,
         enterCompetition: this.enterCompetition === 'yes'
       })

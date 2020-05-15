@@ -2,65 +2,61 @@ import Form from '../Form.vue'
 import { shallowMount } from '@vue/test-utils'
 
 describe('Form.vue', () => {
-  test('emits form-submitted when form is submmited', () => {
+  /**
+   * It tests that the component emits a custom-event (output)
+   * when another event (submit) fires (input)
+   */
+  test('emits form-submitted when submit button is clicked', () => {
     const wrapper = shallowMount(Form, {
       mocks: { axios: { post: jest.fn() } }
     })
-    wrapper.find('button').trigger('submit')
+
+    wrapper.find('button[type="submit"]').trigger('submit')
     expect(wrapper.emitted('form-submitted')).toHaveLength(1)
   })
 
-  test('sends post request with email on submit', () => {
-    const axios = {
-      post: jest.fn()
-    }
-    const wrapper = shallowMount(Form, {
-      mocks: {
-        axios
-      }
-    })
-    const input = wrapper.find('input[type="email"]')
-    input.setValue('email@gmail.com')
-    wrapper.find('button').trigger('submit')
-    const url = 'http://demo7437963.mockable.io/validate'
-    const expectedData = expect.objectContaining({
-      email: 'email@gmail.com'
-    })
-    expect(axios.post).toHaveBeenCalledWith(url, expectedData)
-  })
+  /**
+   * It tests form submition request. In simple words: ensure
+   * the form post some data to the right endpoint.
+   */
+  test('POST inputed user email when submint is triggered', () => {
+    const axios = { post: jest.fn() }
+    const wrapper = shallowMount(Form, { mocks: { axios } })
+    const url = '/subscribe'
+    const email = 'user@email.com'
 
-  test('sends post request with default enterCompetition checkbox value on submit', () => {
-    const axios = {
-      post: jest.fn()
-    }
-    const wrapper = shallowMount(Form, {
-      mocks: {
-        axios
-      }
-    })
-    const url = 'http://demo7437963.mockable.io/validate'
-    wrapper.find('button').trigger('submit')
-    expect(axios.post).toHaveBeenCalledWith(url, expect.objectContaining({
+    wrapper.find('input[name="email"]').setValue(email)
+
+    wrapper.find('button[type="submit"]').trigger('submit')
+
+    expect(axios.post).toHaveBeenCalledWith(url, {
+      email,
       enterCompetition: true
-    }))
+    })
   })
 
-  test('sends post request with enterCompetition checkbox value on submit', () => {
-    const axios = {
-      post: jest.fn()
-    }
+  test('enterCompetion input value is yes is checked by default', () => {
     const wrapper = shallowMount(Form, {
-      mocks: {
-        axios
-      }
+      mocks: { axios: { post: jest.fn() } }
     })
-    const url = 'http://demo7437963.mockable.io/validate'
+
+    const input = wrapper.find('input[value="yes"]')
+
+    expect(input.element.checked).toBe(true)
+  })
+
+  test('send POST request with enterCompetiton value on submit', () => {
+    const url = '/subscribe'
+    const axios = { post: jest.fn() }
+    const wrapper = shallowMount(Form, { mocks: { axios } })
 
     wrapper.find('input[value="no"]').setChecked()
-    wrapper.find('button').trigger('submit')
 
-    expect(axios.post).toHaveBeenCalledWith(url, expect.objectContaining({
+    wrapper.find('button[type="submit"]').trigger('submit')
+
+    expect(axios.post).toHaveBeenCalledWith(url, {
+      email: null,
       enterCompetition: false
-    }))
+    })
   })
 })
